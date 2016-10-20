@@ -2,7 +2,13 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.blue-indigo.min.css" /> 
+		<script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
 		<script type="text/javascript" src="myScript.js"></script>
+		
 		<title>Page Title</title>
 		<style>
 			.errorSpan{
@@ -17,47 +23,124 @@
 			.messageSpan{
 				color: DarkGray;
 			}
+			#consoleDiv {
+				position:absolute;
+				right:5px;
+				top:8px;
+			}
+			.consoleLog {
+				overflow-y:auto; /* automatic scroll bar */
+				overflow-x:auto; /* automatic scroll bar */
+				height: 60vh;
+				max-height: 60vh; /* max height nearly half the screen */
+			}
+			hr {
+				margin: 0;
+			}
 		</style>
 	</head>
 	
 	<body onLoad="firstLoading()">
-		<h1>Twitch 2 Kodi</h1>
-		
-		<fieldset>
-		<legend>WS Connection</legend>
-			<input id="switchButton" type="button" value="Connect" onClick="switchConnection()"/>
-			<div id="switchMessage"></div>
-			<div id="switchOutput"></div>
-		</fieldset>
-		
-		
-		<fieldset id="urlBox">
-		<legend>Indiquer l'URL</legend>
-		<div>
-			Custom URL :
-			<select>
-				<option value="http://twitch.tv">Twitch.tv</option>
-				<option id="youtube" value="youtube" disabled>Youtube</option>
-			</select>
-			/
-			<select>
-				<option value="mistermv">MisterMV</option>
-				<option value="zerator">Zerator</option>
-			</select>
-			/
-			<input type="text" placeholder="Vidéo ID">
-			</input>
-		</div>
-		
-		<div>
-			Full URL :
-			<input id="completUrl" type="text" placeholder="Complet URL" size="50">
-			</input>
-		</div>
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+			<header class="mdl-layout__header">
+				<div class="mdl-layout__header-row">
+					<span class="mdl-layout-title">Twitch 2 Kodi</span>
+					<div class="mdl-layout-spacer"></div>
+					<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+						<i class="material-icons">more_vert</i>
+					</button>
+					<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+						<li class="mdl-menu__item">peut être</li>
+						<li class="mdl-menu__item">des élements</li>
+						<li class="mdl-menu__item">dynamiques 😊</li>
+					</ul>
+				</div>
+			</header>
+			
+			<main id="center" class="mdl-layout__content mdl-color--grey-100">
+			<div class="mdl-grid">
+				<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-grid">
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Connection au WebSocket</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						<!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switchButton">
+							<input type="checkbox" id="switchButton" class="mdl-switch__input" onChange="switchConnection()">
+							<span class="mdl-switch__label"></span>
+						</label-->
+						<a class="mdl-button mdl-button--colored mdl-button--raised mdl-button--accent mdl-js-button mdl-js-ripple-effect"
+							id="switchButton" href="#" onClick="switchConnection()">connect</a>
+						
+					</div>
+				</div>
+				
+				<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-grid">
+					<div id="urlBox">
+						<div class="mdl-card__title">
+							<h2 class="mdl-card__title-text">URL à transmettre</h2>
+						</div>
+						
+						<div>
+							Custom URL :
+							<select>
+								<option value="http://twitch.tv">Twitch.tv</option>
+								<option id="youtube" value="youtube" disabled>Youtube</option>
+							</select>
+							/
+							<select>
+								<option value="mistermv">MisterMV</option>
+								<option value="zerator">Zerator</option>
+							</select>
+							/
+							<input type="text" placeholder="Vidéo ID">
+							</input>
+						</div>
+						
+						<div>
+							Full URL :
+							<input id="completUrl" type="text" placeholder="Complet URL">
+							</input>
+						</div>
 
-		<div>
-			<input type="button" value="Send" onClick="sendMessage()"/>
+						<div class="mdl-card__actions mdl-card--border">
+							<a class="mdl-button mdl-button--colored mdl-button--raised mdl-button--accent mdl-js-button mdl-js-ripple-effect"
+								id="sendButton" href="#" onClick="sendMessage()">Send</a>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="mdl-grid">
+				<div id="consoleDiv" class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--5-col mdl-cell--3-col-tablet mdl-cell--hide-phone mdl-grid">
+					<header class="mdl-layout__header">
+						<div class="mdl-layout__header-row">
+							<span class="mdl-layout-title">Console</span>
+							<div class="mdl-layout-spacer"></div>
+							<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="consoleMenu">
+								<i class="material-icons">more_vert</i>
+							</button>
+							<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="consoleMenu">
+								<li class="mdl-menu__item" onClick="clearLog()">Clear</li>
+								<li class="mdl-menu__item" disabled>Save</li>
+							</ul>
+						</div>
+					</header>
+					
+					<div id="consoleLog" class="consoleLog mdl-card__supporting-text">
+					
+					</div>
+				</div>
+			</div>
+			<div class="mdl-grid">
+				<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--hide-desktop mdl-cell--hide-tablet mdl-grid">
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Console</h2>
+					</div>
+					<div id="consoleLogPhone" class="consoleLog mdl-card__supporting-text">
+					
+					</div>
+				</div>
+			</div>
+			</main>
 		</div>
-		</fieldset>
 	</body>
 </html> 

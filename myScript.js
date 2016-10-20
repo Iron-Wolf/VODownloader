@@ -8,8 +8,11 @@ var wsUri = "ws://localhost:8080/";
 var websocket;
 
 function firstLoading() {
-	var switchMessage = document.getElementById('switchMessage');
+	var consoleLog = document.getElementById('consoleLog');
+	var consoleLogPhone = document.getElementById('consoleLogPhone');
 	var switchButton = document.getElementById('switchButton');
+	var sendButton = document.getElementById('sendButton');
+	
 	disableDiv(true);
 }
 
@@ -18,29 +21,30 @@ function firstLoading() {
 //		WEBSOCKET CORE		   //
 // --------------------------- //
 function switchConnection() {
-	if (switchButton.value == "Connect") {
+	if (switchButton.text == "connect") {
 		// get connection to the WebSocket server and update UI
 		try {
 			websocket = new WebSocket(wsUri);
 		}
 		catch (ex) {
-			switchMessage.innerHTML = '<span class="errorSpan">Exception: ' + ex + '</span>';
+			appendConsoleText('errorSpan', 'Exception: ' + ex);
 			return;
 		}
-
+		
 		websocket.onopen = function(evt) { onOpen(evt) };
 		websocket.onclose = function(evt) { onClose(evt) };
 		websocket.onmessage = function(evt) { onMessage(evt) };
 		websocket.onerror = function(evt) { onError(evt) };
 		
 		enableUI(true);
-		//switchMessage.innerHTML = '<span class="okSpan">Connection OK</span>';
+		appendConsoleText('okSpan', 'Connection OK');
 	}
-	else if (switchButton.value == "Disconnect") {
+	else if (switchButton.text == "disconnect") {
 		websocket.close();
 		enableUI(false);
-		//switchMessage.innerHTML = '<span class="infoSpan">Disconnected</span>';
+		appendConsoleText('infoSpan', 'Disconnected');
 	}
+
 }
 
 function sendMessage() {
@@ -50,7 +54,7 @@ function sendMessage() {
 		websocket.send(message);
 	}
 	catch (ex) {
-		switchMessage.innerHTML = '<span class="errorSpan">Exception: ' + ex + '</span>';
+		appendConsoleText('errorSpan', 'sendMessage: ' + ex);
 	}
 }
 
@@ -58,25 +62,25 @@ function sendMessage() {
 function onOpen(evt) {
 	// change layout acording to the connection status
 	enableUI(true);
-	switchMessage.innerHTML = '<span class="okSpan">onOpen: ' + evt.data + '</span>';
+	appendConsoleText('okSpan', 'onOpen: ' + evt.data );
 }
 
 function onClose(evt) {
 	// change layout acording to the connection status
 	enableUI(false);
-	switchMessage.innerHTML = '<span class="infoSpan">onClose: [Clean: ' + evt.wasClean 
-								+ ', Code: ' + evt.code + ', Reason: ' + (evt.reason || 'none') + ']</span>';
+	appendConsoleText('infoSpan', 'onClose: [Clean: ' + evt.wasClean 
+								+ ', Code: ' + evt.code + ', Reason: ' + (evt.reason || 'none') + ']' );
 }
 
 function onMessage(evt) {
-	switchMessage.innerHTML = '<span class="messageSpan">onMessage: ' + evt.data + '</span>';
+	appendConsoleText('messageSpan', 'onMessage: ' + evt.data );
 	// if data NOT contain the given String, return -1
 	if (evt.data.indexOf("...") === -1)
-		document.getElementById('switchOutput').innerHTML = evt.data;
+		appendConsoleText('', 'Response : ' + evt.data);
 }
 
 function onError(evt) {
-	switchMessage.innerHTML = '<span class="errorSpan">onError: ' + evt.data + '</span>';
+	appendConsoleText('errorSpan', 'onError: ' + evt.data);
 }
 
 
@@ -87,7 +91,7 @@ function enableUI(status) {
 	// to enable UI : set the "disable" attribut to "false"
 	disableDiv(!status);
 	// update some text
-	switchButton.value = (status) ? "Disconnect" : "Connect";
+	switchButton.text = (status) ? "disconnect" : "connect";
 }
 
 function disableDiv(status) {
@@ -95,9 +99,23 @@ function disableDiv(status) {
 	// TODO : temporary class name
 	document.getElementById("urlBox").className = (status) ? "messageSpan" : "";
 	
+	if (status) {sendButton.setAttribute('disabled', true );}
+	else {sendButton.removeAttribute('disabled');}
+	
 	for(var i = 0; i < allChildNodes.length; i++) {
 		allChildNodes[i].disabled = (allChildNodes[i].id != "youtube") ? status : "true";
 	}
+}
+
+function appendConsoleText(type, text) {
+	var currentTime = new Date().toLocaleString();
+	consoleLog.innerHTML = consoleLog.innerHTML + currentTime + ' <span class="' + type + '">' + text + '<br/><hr></span>' ;
+	consoleLogPhone.innerHTML = consoleLogPhone.innerHTML + currentTime + ' <span class="' + type + '">' + text + '<br/><hr></span>' ;
+}
+
+function clearLog() {
+	consoleLog.innerHTML = "";
+	consoleLogPhone.innerHTML = "";
 }
 
 function reverse(s) {
