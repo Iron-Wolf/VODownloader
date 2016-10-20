@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<script type="text/javascript" src="myScript.js"></script>
+		<title>Page Title</title>
+		<style>
+			.errorSpan{
+				color: red;
+			}
+			.okSpan{
+				color: green;
+			}
+			.infoSpan{
+				color: blue;
+			}
+			.messageSpan{
+				color: DarkGray;
+			}
+		</style>
+	</head>
+	
+	<body onLoad="firstLoading()">
+		<h1>Twitch 2 Kodi</h1>
+		
+		<fieldset>
+		<legend>WS Connection</legend>
+			<input id="switchButton" type="button" value="Connect" onClick="switchConnection()"/>
+			<div id="switchMessage"></div>
+			<div id="switchOutput"></div>
+		</fieldset>
+		
+		
+		<fieldset id="urlBox">
+		<legend>Indiquer l'URL</legend>
+		<div>
+			Custom URL :
+			<select>
+				<option value="http://twitch.tv">Twitch.tv</option>
+				<option id="youtube" value="youtube" disabled>Youtube</option>
+			</select>
+			/
+			<select>
+				<option value="mistermv">MisterMV</option>
+				<option value="zerator">Zerator</option>
+			</select>
+			/
+			<input type="text" placeholder="Vidéo ID">
+			</input>
+		</div>
+		
+		<div>
+			Full URL :
+			<input id="completUrl" type="text" placeholder="Complet URL" size="50">
+			</input>
+		</div>
+
+		<div>
+			<input type="button" value="Send" onClick="sendMessage()"/>
+		</div>
+		</fieldset>
+	</body>
+</html> 
