@@ -14,6 +14,9 @@
 # Project : https://github.com/joewalnes/websocketd
 # Command : ./websocketd --devconsole --port 8080 ./twitch2kodi.sh ws > /dev/null &
 
+# create log folder
+mkdir -p /tmp/t2k
+
 # Check number of parameter
 if [ "$#" != "1" ]; then
 	exit 1
@@ -35,7 +38,6 @@ function process {
 	# --restrict-filenames : remove non unicode char and space
 	# --get-filename : don't download video and return his filename
 	# https://www.twitch.tv/mistermv/v/93554812
-	mkdir /tmp/t2k
 
 	FILE=$(./youtube-dl --get-filename -o "video/%(title)s.%(ext)s" $1 --restrict-filenames)
 	./youtube-dl -f "High" -o "video/%(title)s.%(ext)s" $1 --restrict-filenames > /tmp/t2k/download-worked.log 2> /tmp/t2k/download-failed.log
