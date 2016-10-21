@@ -36,12 +36,12 @@ function switchConnection() {
 		websocket.onmessage = function(evt) { onMessage(evt) };
 		websocket.onerror = function(evt) { onError(evt) };
 		
-		enableUI(true);
-		appendConsoleText('okSpan', 'Connection OK');
+		//enableUI(true);
+		//appendConsoleText('okSpan', 'Connection OK');
 	}
 	else if (switchButton.text == "disconnect") {
 		websocket.close();
-		enableUI(false);
+		//enableUI(false);
 		appendConsoleText('infoSpan', 'Disconnected');
 	}
 
@@ -62,7 +62,7 @@ function sendMessage() {
 function onOpen(evt) {
 	// change layout acording to the connection status
 	enableUI(true);
-	appendConsoleText('okSpan', 'onOpen: ' + evt.data );
+	appendConsoleText('okSpan', 'onOpen: ' + (evt.data || '...') );
 }
 
 function onClose(evt) {
@@ -80,7 +80,7 @@ function onMessage(evt) {
 }
 
 function onError(evt) {
-	appendConsoleText('errorSpan', 'onError: ' + evt.data);
+	appendConsoleText('errorSpan', 'onError: ' + (evt.data || '...'));
 }
 
 
