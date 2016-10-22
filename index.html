@@ -4,13 +4,23 @@
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 		
+		<!-- get mdl -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 		<link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.blue-indigo.min.css" /> 
 		<script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
-		<script type="text/javascript" src="myScript.js"></script>
+		<!-- getmdl-select -->   
+		<!--link rel="stylesheet" href="https://cdn.rawgit.com/CreativeIT/getmdl-select/master/getmdl-select.min.css"-->
 		
-		<title>Page Title</title>
+		<!--my script -->
+		<script defer src="myScript.js" type="text/javascript" ></script>
+		
+		<title>VODownloader</title>
 		<style>
+			hr {
+				margin: 0;
+			}
+			
+			/* class */
 			.errorSpan{
 				color: red;
 			}
@@ -23,24 +33,31 @@
 			.messageSpan{
 				color: DarkGray;
 			}
-			#consoleDiv {
-				position:absolute;
-				right:5px;
-				top:8px;
-			}
 			.consoleLog {
 				overflow-y:auto; /* automatic scroll bar */
 				overflow-x:auto; /* automatic scroll bar */
 				height: 60vh;
 				max-height: 60vh; /* max height nearly half the screen */
 			}
-			hr {
-				margin: 0;
+			
+			/* id */
+			#consoleDiv {
+				position:absolute;
+				right:5px;
+				top:8px;
+			}
+			#statusDiv {
+				overflow-y:auto;
+				height: 30vh;
+				max-height: 30vh;
+			}
+			#cancelButton {
+				margin-left: 98%
 			}
 		</style>
 	</head>
 	
-	<body onLoad="firstLoading()">
+	<body>
 		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 			<header class="mdl-layout__header">
 				<div class="mdl-layout__header-row">
@@ -61,51 +78,41 @@
 			<div class="mdl-grid">
 				<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-grid">
 					<div class="mdl-card__title">
-						<h2 class="mdl-card__title-text">Connection au WebSocket</h2>
+						<h2 class="mdl-card__title-text">VOD url</h2>
 					</div>
 					<div class="mdl-card__supporting-text">
 						<!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switchButton">
 							<input type="checkbox" id="switchButton" class="mdl-switch__input" onChange="switchConnection()">
 							<span class="mdl-switch__label"></span>
 						</label-->
-						<a class="mdl-button mdl-button--colored mdl-button--raised mdl-button--accent mdl-js-button mdl-js-ripple-effect"
-							id="switchButton" href="#" onClick="switchConnection()">connect</a>
+						<div>Utiliser le champ ci dessous pour télécharger la VoD.</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+							<input id="completUrl" class="mdl-textfield__input" type="text" type="text" disabled/>
+							<label class="mdl-textfield__label" for="completUrl">Complet URL</label>
+							<button class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+								id="cancelButton" onClick="document.getElementById('completUrl').value=''" disabled>
+								<i class="material-icons">cancel</i>
+							</button>
+						</div>
 						
+					</div>
+					<div class="mdl-card__actions">
+						<a class="mdl-button mdl-button--colored mdl-button--raised mdl-button--accent mdl-js-button mdl-js-ripple-effect"
+							id="switchButton" href="#" onClick="switchConnection()">open</a>
+						
+						<a class="mdl-button mdl-button--colored mdl-button--raised mdl-button--accent mdl-js-button mdl-js-ripple-effect"
+							id="sendButton" href="#" onClick="sendMessage()" disabled>Send</a>
 					</div>
 				</div>
 				
-				<div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-grid">
-					<div id="urlBox">
-						<div class="mdl-card__title">
-							<h2 class="mdl-card__title-text">URL à transmettre</h2>
-						</div>
-						
-						<div>
-							Custom URL :
-							<select>
-								<option value="http://twitch.tv">Twitch.tv</option>
-								<option id="youtube" value="youtube" disabled>Youtube</option>
-							</select>
-							/
-							<select>
-								<option value="mistermv">MisterMV</option>
-								<option value="zerator">Zerator</option>
-							</select>
-							/
-							<input type="text" placeholder="Vidéo ID">
-							</input>
-						</div>
-						
-						<div>
-							Full URL :
-							<input id="completUrl" type="text" placeholder="Complet URL">
-							</input>
-						</div>
-
-						<div class="mdl-card__actions mdl-card--border">
-							<a class="mdl-button mdl-button--colored mdl-button--raised mdl-button--accent mdl-js-button mdl-js-ripple-effect"
-								id="sendButton" href="#" onClick="sendMessage()">Send</a>
+				<div id="statusDiv" class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-grid">
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Current status</h2>
 					</div>
+					
+					<div class="mdl-card__supporting-text">
+						<div id="statusLog" class="mdl-card__supporting-text">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -126,7 +133,6 @@
 					</header>
 					
 					<div id="consoleLog" class="consoleLog mdl-card__supporting-text">
-					
 					</div>
 				</div>
 			</div>

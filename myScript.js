@@ -5,26 +5,23 @@
 
 // Global variable
 var wsUri = "ws://localhost:8080/";
+var wsUriStatus = "ws://localhost:8081/";
+var wsUriStatusFailed = "ws://localhost:8082/";
 var websocket;
-
-function firstLoading() {
-	var consoleLog = document.getElementById('consoleLog');
-	var consoleLogPhone = document.getElementById('consoleLogPhone');
-	var switchButton = document.getElementById('switchButton');
-	var sendButton = document.getElementById('sendButton');
-	
-	disableDiv(true);
-}
+var websocketStatus;
+var websocketStatusFailed;
 
 
 // --------------------------- //
 //		WEBSOCKET CORE		   //
 // --------------------------- //
 function switchConnection() {
-	if (switchButton.text == "connect") {
+	if (switchButton.text == "open") {
 		// get connection to the WebSocket server and update UI
 		try {
 			websocket = new WebSocket(wsUri);
+			websocketStatus = new WebSocket(wsUriStatus);
+			websocketStatusFailed = new WebSocket(wsUriStatusFailed);
 		}
 		catch (ex) {
 			appendConsoleText('errorSpan', 'Exception: ' + ex);
@@ -36,10 +33,13 @@ function switchConnection() {
 		websocket.onmessage = function(evt) { onMessage(evt) };
 		websocket.onerror = function(evt) { onError(evt) };
 		
+		websocketStatus.onmessage = function(evt) { onMessageStatus(evt) };
+		websocketStatusFailed.onmessage = function(evt) { onMessageStatusFailed(evt) };
+		
 		//enableUI(true);
 		//appendConsoleText('okSpan', 'Connection OK');
 	}
-	else if (switchButton.text == "disconnect") {
+	else if (switchButton.text == "close") {
 		websocket.close();
 		//enableUI(false);
 		appendConsoleText('infoSpan', 'Disconnected');
@@ -64,23 +64,27 @@ function onOpen(evt) {
 	enableUI(true);
 	appendConsoleText('okSpan', 'onOpen: ' + (evt.data || '...') );
 }
-
 function onClose(evt) {
 	// change layout acording to the connection status
 	enableUI(false);
 	appendConsoleText('infoSpan', 'onClose: [Clean: ' + evt.wasClean 
 								+ ', Code: ' + evt.code + ', Reason: ' + (evt.reason || 'none') + ']' );
 }
-
 function onMessage(evt) {
 	appendConsoleText('messageSpan', 'onMessage: ' + evt.data );
 	// if data NOT contain the given String, return -1
-	if (evt.data.indexOf("...") === -1)
-		appendConsoleText('', 'Response : ' + evt.data);
+	/*if (evt.data.indexOf("...") === -1)
+		appendConsoleText('', 'Response : ' + evt.data);*/
 }
-
 function onError(evt) {
 	appendConsoleText('errorSpan', 'onError: ' + (evt.data || '...'));
+}
+
+function onMessageStatus(evt) {
+	statusLog.innerHTML = new Date().toLocaleString() + ' <span class="infoSpan">' + evt.data + '</span>' ;
+}
+function onMessageStatusFailed(evt) {
+	statusLog.innerHTML = new Date().toLocaleString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
 }
 
 
@@ -91,20 +95,26 @@ function enableUI(status) {
 	// to enable UI : set the "disable" attribut to "false"
 	disableDiv(!status);
 	// update some text
-	switchButton.text = (status) ? "disconnect" : "connect";
+	switchButton.text = (status) ? "close" : "open";
 }
 
 function disableDiv(status) {
-	var allChildNodes = document.getElementById("urlBox").getElementsByTagName('*');
-	// TODO : temporary class name
+	if (status) {
+		sendButton.setAttribute('disabled', true);
+		completUrl.setAttribute('disabled', true);
+		cancelButton.setAttribute('disabled', true);
+	}
+	else {
+		sendButton.removeAttribute('disabled');
+		completUrl.removeAttribute('disabled');
+		cancelButton.removeAttribute('disabled');
+	}
+	
+	/*var allChildNodes = document.getElementById("urlBox").getElementsByTagName('*');
 	document.getElementById("urlBox").className = (status) ? "messageSpan" : "";
-	
-	if (status) {sendButton.setAttribute('disabled', true );}
-	else {sendButton.removeAttribute('disabled');}
-	
 	for(var i = 0; i < allChildNodes.length; i++) {
 		allChildNodes[i].disabled = (allChildNodes[i].id != "youtube") ? status : "true";
-	}
+	}*/
 }
 
 function appendConsoleText(type, text) {

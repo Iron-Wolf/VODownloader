@@ -1,5 +1,6 @@
 ### remove GNU/Linux temp file
 *~
+video/*
 
 ### script
 websocketd
