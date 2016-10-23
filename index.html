@@ -48,8 +48,8 @@
 			}
 			#statusDiv {
 				overflow-y:auto;
-				height: 30vh;
-				max-height: 30vh;
+				height: 35vh;
+				max-height: 35vh;
 			}
 			#cancelButton {
 				margin-left: 98%
@@ -67,9 +67,8 @@
 						<i class="material-icons">more_vert</i>
 					</button>
 					<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-						<li class="mdl-menu__item">peut être</li>
-						<li class="mdl-menu__item">des élements</li>
-						<li class="mdl-menu__item">dynamiques 😊</li>
+						<li class="mdl-menu__item" onClick="clearLog()">❌ Clear log</li>
+						<li class="mdl-menu__item" disabled>⚠️ Clear all</li>
 					</ul>
 				</div>
 			</header>
@@ -113,6 +112,8 @@
 					<div class="mdl-card__supporting-text">
 						<div id="statusLog" class="mdl-card__supporting-text">
 						</div>
+						<div id="statusFailedLog" class="mdl-card__supporting-text">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -126,8 +127,8 @@
 								<i class="material-icons">more_vert</i>
 							</button>
 							<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="consoleMenu">
-								<li class="mdl-menu__item" onClick="clearLog()">Clear</li>
-								<li class="mdl-menu__item" disabled>Save</li>
+								<li class="mdl-menu__item" onClick="clearLog()">❌ Clear</li>
+								<li class="mdl-menu__item" disabled>✔️ Save</li>
 							</ul>
 						</div>
 					</header>

@@ -35,13 +35,11 @@ function switchConnection() {
 		
 		websocketStatus.onmessage = function(evt) { onMessageStatus(evt) };
 		websocketStatusFailed.onmessage = function(evt) { onMessageStatusFailed(evt) };
-		
-		//enableUI(true);
-		//appendConsoleText('okSpan', 'Connection OK');
 	}
 	else if (switchButton.text == "close") {
 		websocket.close();
-		//enableUI(false);
+		websocketStatus.close();
+		websocketStatusFailed.close();
 		appendConsoleText('infoSpan', 'Disconnected');
 	}
 
@@ -81,10 +79,16 @@ function onError(evt) {
 }
 
 function onMessageStatus(evt) {
+	// display last message and close connection if main socket is closed
 	statusLog.innerHTML = new Date().toLocaleString() + ' <span class="infoSpan">' + evt.data + '</span>' ;
+	if (websocket.readyState == 3)
+		websocketStatus.close();
 }
 function onMessageStatusFailed(evt) {
-	statusLog.innerHTML = new Date().toLocaleString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
+	// display last message and close connection if main socket is closed
+	statusFailedLog.innerHTML = new Date().toLocaleString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
+	if (websocket.readyState == 3)
+		websocketStatusFailed.close();
 }
 
 
@@ -118,9 +122,13 @@ function disableDiv(status) {
 }
 
 function appendConsoleText(type, text) {
+	// add text to the consol
 	var currentTime = new Date().toLocaleString();
 	consoleLog.innerHTML = consoleLog.innerHTML + currentTime + ' <span class="' + type + '">' + text + '<br/><hr></span>' ;
 	consoleLogPhone.innerHTML = consoleLogPhone.innerHTML + currentTime + ' <span class="' + type + '">' + text + '<br/><hr></span>' ;
+	
+	// auto-scrolling
+	consoleLog.scrollTop = consoleLog.scrollHeight;
 }
 
 function clearLog() {

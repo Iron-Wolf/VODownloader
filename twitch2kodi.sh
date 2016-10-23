@@ -39,6 +39,7 @@ function process {
 	# --get-filename : don't download video and return his filename
 	# https://www.twitch.tv/mistermv/v/93554812
 
+	echo "Start download..."
 	FILE=$(./youtube-dl --get-filename -o "video/%(title)s.%(ext)s" $1 --restrict-filenames)
 	./youtube-dl -f "High" -o "video/%(title)s.%(ext)s" $1 --restrict-filenames > /tmp/t2k/download-worked.log 2> /tmp/t2k/download-failed.log
 
@@ -47,12 +48,14 @@ function process {
 		echo "Error on youtube-dl"
 		exit 2
 	fi
+	echo "Download finish !"
 
 	# PART 2 : transfert it to the server
 	HOST='xxx.xxx.xx.xx'
 	USER='xxxx'
 	PASSWD='xxxx'
 
+	echo "Start FTP transfert..."
 	#sshpass -p $PASSWD scp $FILE $USER@$HOST:Movies > /tmp/t2k/upload-worked.log 2> /tmp/t2k/upload-failed.log
 
 	EXITSTATUS=$?
@@ -60,6 +63,7 @@ function process {
 		echo "Error on sshpass"
 		exit 2
 	fi
+	echo "FTP transfert finish !"
 }
 
 
