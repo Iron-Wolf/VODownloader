@@ -19,64 +19,64 @@ mkdir -p /tmp/t2k
 
 # Check number of parameter
 if [ "$#" != "1" ]; then
-	exit 1
+  exit 1
 fi
 
 # conditionnal launch
 if [ "$1" == "ws" ]; then
-	# launch script in WebSocket mode
-	WEBSOCKET=true
+  # launch script in WebSocket mode
+  WEBSOCKET=true
 else
-	WEBSOCKET=false
+  WEBSOCKET=false
 fi
 
 
 function process {
-	# PART 1 : dowload video
-	# -f : format
-	# -o : output file
-	# --restrict-filenames : remove non unicode char and space
-	# --get-filename : don't download video and return his filename
-	# https://www.twitch.tv/mistermv/v/93554812
+  # PART 1 : dowload video
+  # -f : format
+  # -o : output file
+  # --restrict-filenames : remove non unicode char and space
+  # --get-filename : don't download video and return his filename
+  # https://www.twitch.tv/mistermv/v/93554812
 
-	echo "Start download..."
-	FILE=$(./youtube-dl --get-filename -o "video/%(title)s.%(ext)s" $1 --restrict-filenames)
-	./youtube-dl -f "High" -o "video/%(title)s.%(ext)s" $1 --restrict-filenames > /tmp/t2k/download-worked.log 2> /tmp/t2k/download-failed.log
+  echo "Start download..."
+  FILE=$(./youtube-dl --get-filename -o "video/%(title)s.%(ext)s" $1 --restrict-filenames)
+  ./youtube-dl -f "High" -o "video/%(title)s.%(ext)s" $1 --restrict-filenames > /tmp/t2k/download-worked.log 2> /tmp/t2k/download-failed.log
 
-	EXITSTATUS=$?
-	if [ $EXITSTATUS != "0" ]; then
-		echo "Error on youtube-dl"
-		exit 2
-	fi
-	echo "Download finish !"
+  EXITSTATUS=$?
+  if [ $EXITSTATUS != "0" ]; then
+    echo "Error on youtube-dl"
+    exit 2
+  fi
+  echo "Download finish !"
 
-	# PART 2 : transfert it to the server
-	HOST='xxx.xxx.xx.xx'
-	USER='xxxx'
-	PASSWD='xxxx'
+  # PART 2 : transfert it to the server
+  HOST='xxx.xxx.xx.xx' 
+  USER='xxxx' 
+  PASSWD='xxxx' 
 
-	echo "Start FTP transfert..."
-	#sshpass -p $PASSWD scp $FILE $USER@$HOST:Movies > /tmp/t2k/upload-worked.log 2> /tmp/t2k/upload-failed.log
+  echo "Start FTP transfert..."
+  #sshpass -p $PASSWD scp $FILE $USER@$HOST:Movies > /tmp/t2k/upload-worked.log 2> /tmp/t2k/upload-failed.log
 
-	EXITSTATUS=$?
-	if [ $EXITSTATUS != "0" ]; then
-		echo "Error on sshpass"
-		exit 2
-	fi
-	echo "FTP transfert finish !"
+  EXITSTATUS=$?
+  if [ $EXITSTATUS != "0" ]; then
+    echo "Error on sshpass"
+    exit 2
+  fi
+  echo "FTP transfert finish !"
 }
 
 
 # do / while
 while : ; do
-	if [ $WEBSOCKET == true ]; then
-		# in WebSocket mode, read URL from input
-		echo "Waiting for url..."; read LINE
-		process $LINE
-	else
-		process $1
-	fi
-	[[ $WEBSOCKET == true ]] || break
+  if [ $WEBSOCKET == true ]; then
+    # in WebSocket mode, read URL from input
+    echo "Waiting for url..."; read LINE
+    process $LINE
+  else
+    process $1
+  fi
+  [[ $WEBSOCKET == true ]] || break
 done
 
 exit 0
