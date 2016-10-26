@@ -80,13 +80,13 @@ function onError(evt) {
 
 function onMessageStatus(evt) {
 	// display last message and close connection if main socket is closed
-	statusLog.innerHTML = new Date().toLocaleString() + ' <span class="infoSpan">' + evt.data + '</span>' ;
+	statusLog.innerHTML = new Date().toLocaleTimeString() + ' <span class="infoSpan">' + evt.data + '</span>' ;
 	if (websocket.readyState == 3)
 		websocketStatus.close();
 }
 function onMessageStatusFailed(evt) {
 	// display last message and close connection if main socket is closed
-	statusFailedLog.innerHTML = new Date().toLocaleString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
+	statusFailedLog.innerHTML = new Date().toLocaleTimeString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
 	if (websocket.readyState == 3)
 		websocketStatusFailed.close();
 }
@@ -123,12 +123,13 @@ function disableDiv(status) {
 
 function appendConsoleText(type, text) {
 	// add text to the consol
-	var currentTime = new Date().toLocaleString();
+	var currentTime = new Date().toLocaleTimeString();
 	consoleLog.innerHTML = consoleLog.innerHTML + currentTime + ' <span class="' + type + '">' + text + '<br/><hr></span>' ;
 	consoleLogPhone.innerHTML = consoleLogPhone.innerHTML + currentTime + ' <span class="' + type + '">' + text + '<br/><hr></span>' ;
 	
 	// auto-scrolling
 	consoleLog.scrollTop = consoleLog.scrollHeight;
+	consoleLogPhone.scrollTop = consoleLogPhone.scrollHeight;
 }
 
 function clearLog() {
