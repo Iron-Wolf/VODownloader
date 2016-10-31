@@ -80,13 +80,13 @@ function onError(evt) {
 
 function onMessageStatus(evt) {
   // display last message and close connection if main socket is closed
-  statusLog.innerHTML = new Date().toLocaleTimeString() + ' <span class="infoSpan">' + evt.data + '</span>' ;
-    websocketStatus.close();
+  downloadStatusLog.innerHTML = new Date().toLocaleTimeString() + ' <span class="infoSpan">' + evt.data + '</span>' ;
   if (websocket.readyState == 3)
+    websocketStatus.close();
 }
 function onMessageStatusFailed(evt) {
   // display last message and close connection if main socket is closed
-  statusFailedLog.innerHTML = new Date().toLocaleTimeString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
+  downloadFailedLog.innerHTML = new Date().toLocaleTimeString() + ' <span class="errorSpan">' + evt.data + '</span>' ;
   if (websocket.readyState == 3)
     websocketStatusFailed.close();
 }
