@@ -4,9 +4,10 @@
 // --------------------- //
 
 // Global variable
-var wsUri = "ws://localhost:8080/";
-var wsUriStatus = "ws://localhost:8081/";
-var wsUriStatusFailed = "ws://localhost:8082/";
+var ipAddress = "localhost";
+var wsUri = "ws://" + ipAddress + ":8080/";
+var wsUriStatus = "ws://" + ipAddress + ":8081/";
+var wsUriStatusFailed = "ws://" + ipAddress + ":8082/";
 var websocket;
 var websocketStatus;
 var websocketStatusFailed;
