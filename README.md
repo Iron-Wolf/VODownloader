@@ -17,3 +17,6 @@ The code is as clean as possible. However, it's a side project, so don't expect 
 
 2. Connect to __index.html__ via http
   * The __myScript.js__ script will init connection with the three websocket, and dynamically update the UI.
+
+##Docker
+See the docker implementation of the project on my [other repo](https://github.com/Iron-Wolf/Docker-conf/tree/master/vodownloader).
