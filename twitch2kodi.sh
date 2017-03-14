@@ -41,7 +41,7 @@ function process {
 
   echo "Start download..."
   FILE=$(./youtube-dl --get-filename -o "video/%(title)s.%(ext)s" $1 --restrict-filenames)
-  ./youtube-dl -f "High" -o "video/%(title)s.%(ext)s" $1 --restrict-filenames > /tmp/t2k/download-worked.log 2> /tmp/t2k/download-failed.log
+  ./youtube-dl -f "high" -o "video/%(title)s.%(ext)s" $1 --restrict-filenames > /tmp/t2k/download-worked.log 2> /tmp/t2k/download-failed.log
 
   EXITSTATUS=$?
   if [ $EXITSTATUS != "0" ]; then
